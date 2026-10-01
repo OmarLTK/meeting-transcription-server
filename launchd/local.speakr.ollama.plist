@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Runs scripts/start-ollama.sh at login so Ollama always starts with the
+  correct context length. Install:
+    sed "s#__REPO__#$HOME/meeting-transcription-server#g" launchd/local.speakr.ollama.plist \
+      > ~/Library/LaunchAgents/local.speakr.ollama.plist
+    launchctl load ~/Library/LaunchAgents/local.speakr.ollama.plist
+  Then remove Ollama from Login Items so the two don't race.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.speakr.ollama</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__REPO__/scripts/start-ollama.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/speakr-ollama.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/speakr-ollama.log</string>
+</dict>
+</plist>

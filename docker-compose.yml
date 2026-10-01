@@ -1,0 +1,23 @@
+# Speakr on macOS via Colima.
+# Inference (Ollama) runs natively on the host; this container only calls it over HTTP.
+services:
+  app:
+    # Upstream is alpha software with an active security-fix history.
+    # Pin to a specific release tag from Docker Hub once you've tested it,
+    # and read release notes before every bump.
+    image: learnedmachine/speakr:latest
+    container_name: speakr
+    restart: unless-stopped
+    ports:
+      # Loopback only. The ONLY way in from other machines is Tailscale Serve,
+      # which proxies HTTPS -> 127.0.0.1:8899. Never publish "8899:8899":
+      # that exposes plain HTTP on the LAN and bypasses the HTTPS front door.
+      - "127.0.0.1:8899:8899"
+    env_file:
+      - .env
+    volumes:
+      - ./uploads:/data/uploads      # audio (deleted after retention window)
+      - ./instance:/data/instance    # SQLite DB: transcripts, summaries, users
+    extra_hosts:
+      # Lets the container reach native Ollama on the Mac host.
+      - "host.docker.internal:host-gateway"

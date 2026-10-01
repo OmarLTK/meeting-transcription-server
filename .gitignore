@@ -1,0 +1,65 @@
+# =============================================================================
+# This repo holds configuration, scripts, and docs only.
+# Nothing containing a key or a meeting ever belongs in it.
+#
+# Note: .gitignore prevents accidents, it does not undo them. A secret that is
+# committed once lives in the history until the history is rewritten. The real
+# protection is that the live deployment runs from ~/speakr, not from a clone.
+# =============================================================================
+
+# --- Secrets -----------------------------------------------------------------
+# Every .env variant, then un-ignore the committed template.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+credentials.json
+# Tailscale node state and auth keys, if anything is ever run from here
+tailscaled.state
+*.tsauthkey
+
+# --- Runtime data: meeting audio, transcripts, the SQLite database -----------
+# Present if the repo is ever cloned into, or copied over, the live directory.
+uploads/
+instance/
+*.db
+*.sqlite
+*.sqlite3
+# Directories the restore procedure in docs/RUNBOOK.md creates
+instance.broken/
+uploads.broken/
+_staging/
+exports/
+auto-process/
+
+# --- Backups -----------------------------------------------------------------
+# These contain .env and every recording. Keep them off the machine, not in git.
+backups/
+speakr-backups/
+speakr-backup*
+speakr-*.tar.gz
+*.tar.gz
+*.zip
+
+# --- Logs --------------------------------------------------------------------
+*.log
+speakr-ollama.log
+
+# --- Local overrides ---------------------------------------------------------
+# docker-compose reads this automatically; it is machine-specific by definition.
+docker-compose.override.yml
+# Generated from launchd/local.speakr.ollama.plist with the real $HOME baked in.
+local.speakr.ollama.generated.plist
+
+# --- OS / editor -------------------------------------------------------------
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
